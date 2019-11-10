@@ -1,0 +1,38 @@
+<div class="modal fade" id="modalPeriodos" tabindex="-1" role="dialog" aria-labelledby="labelTituloModal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="labelTituloModal">Editar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="inputId">
+                <div class="form-group">
+                    <label for="">Descripcion</label>
+                    <input type="text" name="" id="inputDescripcion" class="form-control" placeholder="">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Fecha Inicio</label>
+                            <input type="date" name="" class="form-control" id="inputFechaInicio">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Fecha Fin</label>
+                            <input type="date" name="" class="form-control" id="inputFechaFin">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="btnGuardarModal" class="btn btn-primary">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>

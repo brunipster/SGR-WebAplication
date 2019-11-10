@@ -1,3 +1,4 @@
+<script src="/js/periodo/crud.js"></script>
 <div class="container p-4">
     <table class="table">
         <thead class="thead-dark">
@@ -14,9 +15,8 @@
                 <td scope="row">{{descripcion}}</td>
                 <td>{{momentjs fechaInicio 'LL'}}</td>
                 <td>{{momentjs fechafin 'LL'}}</td>
-                <td class="text-right"><a class="btn btn-danger text-white">Eliminar</a>
-                    <a id="botonEditar" data-id='{{id}}'
-                        class="btn btn-secondary text-white">Editar</a></td>
+                <td class="text-right"><a data-id='{{id}}' class="btn btn-danger text-white botonEliminar">Eliminar</a>
+                    <a id="" data-id='{{id}}' class="btn btn-secondary text-white botonEditar">Editar</a></td>
             </tr>
             {{else}}
             <tr>
@@ -25,50 +25,10 @@
             {{/each}}
             <tr>
                 <th colspan="3"></th>
-                <th class="text-right"><a onclick="nuevo()" class="btn btn-primary text-white">Nuevo</a></th>
+                <th class="text-right"><a class="btn btn-primary text-white" id="btnNuevo">Nuevo</a></th>
             </tr>
         </tbody>
     </table>
 </div>
 
-<div class="modal fade" id="modalPeriodos" tabindex="-1" role="dialog" aria-labelledby="labelTituloModal"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="labelTituloModal">Editar</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-
-    $(document).ready(() => {
-
-        $('#botonEditar').click(function(event){
-            var id = $(event.target).data('id');
-            console.log(id);
-            $.ajax({
-                url: '/periodos/obtener/' + id,
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).done(function (data) {
-                $('#modalPeriodos').modal('toggle')
-            });
-        })
-
-    })
-</script>
+{{> periodo/modal}}
