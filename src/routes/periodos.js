@@ -4,13 +4,14 @@ const moment = require('moment');
 const pool = require('../database');
 const helpers = require('../lib/helpers');
 const periodoController = require('../classes/periodoController');
+const { isLoggedIn } = require('../lib/auth');
 
-router.get('/', async (req, res) => {
+router.get('/', isLoggedIn, async (req, res) => {
     const periodos = await pool.query('SELECT * FROM `Periodo`');
     res.render('periodos', { periodos });
 })
 
-router.get('/obtener/:id', async (req, res) => {
+router.get('/obtener/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params
     const periodo = await periodoController.get(id);
     if (periodo.length > 0) {
@@ -23,7 +24,7 @@ router.get('/obtener/:id', async (req, res) => {
     }
 })
 
-router.post('/crear', async (req, res) => {
+router.post('/crear', isLoggedIn, async (req, res) => {
     const body = req.body;
     console.log(helpers.formatDateJsToSql(body.fechaInicio));
     body.fechaInicio = helpers.formatDateJsToSql(body.fechaInicio);
@@ -32,7 +33,7 @@ router.post('/crear', async (req, res) => {
     res.send(body);
 });
 
-router.post('/editar/:id', async (req, res) => {
+router.post('/editar/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params
     const body = req.body;
     body.fechaInicio = helpers.formatDateJsToSql(body.fechaInicio);
@@ -41,7 +42,7 @@ router.post('/editar/:id', async (req, res) => {
     res.send(body);
 });
 
-router.delete('/eliminar/:id', async (req, res) => {
+router.delete('/eliminar/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params
     let respEliminarPeriodo = await periodoController.delete(id)
     console.log(respEliminarPeriodo);

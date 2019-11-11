@@ -57,7 +57,6 @@ PRIMARY KEY (`id`)
 INSERT INTO `nivelgobierno` (`descripcion`, `id`) VALUES ('Regional', 'REG'), ('Distrital', 'DIS'), ('Departamental', 'DEP')
 
 -- ************************************** `Usuario`
-
 CREATE TABLE `Usuario`
 (
  `id`            int NOT NULL AUTO_INCREMENT ,
@@ -65,12 +64,13 @@ CREATE TABLE `Usuario`
  `nombreEntidad` varchar(50) NULL ,
  `nivelGobierno` char(3) NOT NULL ,
  `rol`           char(3) NULL ,
+ `password`      varchar(500) NOT NULL ,
+ `usuario`       varchar(50) NOT NULL ,
 
 PRIMARY KEY (`id`),
 KEY `fkIdx_141` (`nivelGobierno`),
 CONSTRAINT `FK_141` FOREIGN KEY `fkIdx_141` (`nivelGobierno`) REFERENCES `NivelGobierno` (`id`)
 );
-
 
 -- ************************************** `dbo`.`Cuestionario`
 
@@ -103,4 +103,38 @@ KEY `fkIdx_43` (`idPregunta`),
 CONSTRAINT `FK_43` FOREIGN KEY `fkIdx_43` (`idPregunta`) REFERENCES `dbo`.`Pregunta` (`id`),
 KEY `fkIdx_49` (`idCuestionario`),
 CONSTRAINT `FK_49` FOREIGN KEY `fkIdx_49` (`idCuestionario`) REFERENCES `dbo`.`Cuestionario` (`id`)
+);
+
+-- ************************************** `dbo`.`Usuario_Cuestionario`
+
+CREATE TABLE `dbo`.`Usuario_Cuestionario`
+(
+ `id`             int NOT NULL AUTO_INCREMENT ,
+ `estado`         tinyint NOT NULL ,
+ `descripcion`    varchar(50) NOT NULL ,
+ `idCuestionario` int NOT NULL ,
+ `idUsuario`      int NOT NULL ,
+
+PRIMARY KEY (`id`),
+KEY `fkIdx_128` (`idUsuario`),
+CONSTRAINT `FK_128` FOREIGN KEY `fkIdx_128` (`idUsuario`) REFERENCES `Usuario` (`id`),
+KEY `fkIdx_81` (`idCuestionario`),
+CONSTRAINT `FK_81` FOREIGN KEY `fkIdx_81` (`idCuestionario`) REFERENCES `dbo`.`Cuestionario` (`id`)
+);
+
+-- ************************************** `dbo`.`Preguntas_Resueltas`
+
+CREATE TABLE `dbo`.`Preguntas_Resueltas`
+(
+ `id`                     int NOT NULL AUTO_INCREMENT ,
+ `respuestaDetalle`       varchar(50) NULL ,
+ `idUsuarioCuestionario`  int NOT NULL ,
+ `idPreguntaCuestionario` int NOT NULL ,
+ `preguntaDetalle`        varchar(50) NULL ,
+
+PRIMARY KEY (`id`),
+KEY `fkIdx_89` (`idUsuarioCuestionario`),
+CONSTRAINT `FK_89` FOREIGN KEY `fkIdx_89` (`idUsuarioCuestionario`) REFERENCES `dbo`.`Usuario_Cuestionario` (`id`),
+KEY `fkIdx_92` (`idPreguntaCuestionario`),
+CONSTRAINT `FK_92` FOREIGN KEY `fkIdx_92` (`idPreguntaCuestionario`) REFERENCES `dbo`.`Preguntas_Cuestionario` (`id`)
 );
