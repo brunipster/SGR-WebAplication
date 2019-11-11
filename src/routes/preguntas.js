@@ -5,19 +5,28 @@ const pool = require('../database');
 
 // holatequiero
 
-router.get('/', async (req,res) =>{
+router.get('/', async (req, res) => {
     const preguntas = await pool.query('SELECT pre.id, pre.descripcion,per.descripcion as periodo ,COUNT(re.id) as cantidadRespuestas FROM Pregunta pre inner join Respuesta re on pre.id = re.idPregunta inner join Periodo per on pre.idPeriodo = per.id GROUP by (pre.id)');
-    res.render('preguntas/lista', {preguntas});
+    res.render('preguntas/lista', { preguntas });
 })
 
-router.get('/crear', async(req,res) => {
+router.get('/buscar', async (req, res) => {
+    const { descripcion, periodo } = req.query
+
+    const preguntas = await pool.query('SELECT * FROM pregunta where descripcion like ? and idPeriodo = ? ', ["%" + descripcion + "%", periodo]);
+    var pregunta = JSON.parse(JSON.stringify(preguntas));
+    console.log(descripcion)
+    res.send(pregunta);
+})
+
+router.get('/crear', async (req, res) => {
     const periodos = await pool.query('SELECT * FROM Periodo');
-    res.render('preguntas/crear', {periodos});
+    res.render('preguntas/crear', { periodos });
 })
 
-router.post('/crear', async(req,res) => {
-    const {descripcion, periodo, respuestas} = req.body;
-    const pregunta = {descripcion : descripcion, idPeriodo: parseInt(periodo)};
+router.post('/crear', async (req, res) => {
+    const { descripcion, periodo, respuestas } = req.body;
+    const pregunta = { descripcion: descripcion, idPeriodo: parseInt(periodo) };
     let respInsertPregunta = await pool.query('INSERT INTO Pregunta set ?', [pregunta]);
 
     let idPregunta = respInsertPregunta.insertId;
@@ -31,33 +40,33 @@ router.post('/crear', async(req,res) => {
     res.send('ok');
 })
 
-router.get('/editar/:id', async(req,res) => {
-    const {id} = req.params
+router.get('/editar/:id', async (req, res) => {
+    const { id } = req.params
 
     const periodos = await pool.query('SELECT * FROM Periodo');
 
-    const responsePregunta =  await pool.query(
-    'SELECT pre.id as idPregunta, pre.descripcion as descPregunta, re.id, re.descripcion, re.valor, re.id as respuestaId '+
-    'FROM Pregunta pre inner join Respuesta re on pre.id = re.idPregunta'+
-    ' WHERE pre.id = ?', [parseInt(id)]);
-    
-    var pregunta  = JSON.parse(JSON.stringify(responsePregunta));
+    const responsePregunta = await pool.query(
+        'SELECT pre.id as idPregunta, pre.descripcion as descPregunta, re.id, re.descripcion, re.valor, re.id as respuestaId ' +
+        'FROM Pregunta pre inner join Respuesta re on pre.id = re.idPregunta' +
+        ' WHERE pre.id = ?', [parseInt(id)]);
+
+    var pregunta = JSON.parse(JSON.stringify(responsePregunta));
     var body = {
         descPregunta: pregunta[0].descPregunta,
         valor: pregunta[0].valor,
         id: pregunta[0].idPregunta,
         respuestas: pregunta
     }
-    res.render('preguntas/editar', {pregunta: body,periodos:periodos });
+    res.render('preguntas/editar', { pregunta: body, periodos: periodos });
 });
 
-router.post('/editar/:id', async(req,res) => {
+router.post('/editar/:id', async (req, res) => {
     const { id } = req.params;
-    const {descripcion, periodo, respuestas} = req.body;
-    const pregunta = {descripcion : descripcion, idPeriodo: periodo};
+    const { descripcion, periodo, respuestas } = req.body;
+    const pregunta = { descripcion: descripcion, idPeriodo: periodo };
     console.log(req.body);
     let respUpdatePregunta = await pool.query('UPDATE Pregunta set ? where id=?', [pregunta, id]);
-    
+
     await pool.query('DELETE FROM Respuesta where idPregunta = ?', [id]);
 
     let listaRespuestas = respuestas.map(resp => {
@@ -69,7 +78,7 @@ router.post('/editar/:id', async(req,res) => {
     res.send('ok');
 });
 
-router.get('/eliminar/:id', async(req,res) => {
+router.get('/eliminar/:id', async (req, res) => {
     const { id } = req.params;
     await pool.query('DELETE FROM Respuesta where idPregunta = ?', [id]);
     await pool.query('DELETE FROM Pregunta WHERE ID = ?', [id]);

@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 app.use(require('./routes/'));
 app.use(require('./routes/authentication'));
 app.use('/preguntas', require('./routes/preguntas'));
-app.use('/cuestionario', require('./routes/cuestionarios'));
+app.use('/cuestionario', require('./routes/cuestionario'));
 app.use('/periodos', require('./routes/periodos'));
 
 // Public

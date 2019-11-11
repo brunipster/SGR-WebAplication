@@ -1,0 +1,184 @@
+<div class="container">
+    <div class="row p-4">
+        <div class="col-md-12 mx-auto">
+            <div class="card">
+                <form id="formCrearPregunta">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Cuestionario</label>
+                                    <input type="hidden" id="inputId" value={{cuestionario.id}}>
+                                    <input type="text" value="{{cuestionario.descripcion}}" id="inputDescripcion"
+                                        class="form-control" placeholder="Descripcion" autofocus>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Periodo</label>
+                                    <select class="form-control" name="" id="selectPeriodo">
+                                        {{#each periodos}}
+                                        <option value="{{id}}">{{descripcion}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nivel de Gobierno</label>
+                                    <select class="form-control" name="" id="selectNivelesGobierno">
+                                        {{#each niveles}}
+                                        <option value="{{id}}">{{descripcion}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Preguntas</label>
+                            <input type="text" name="" id="autocomplete" class="form-control" placeholder=""
+                                aria-describedby="helpId">
+                        </div>
+                        <table class="table tabla-respuesta">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col-1">#</th>
+                                    <th scope="col-10">Descripcion</th>
+                                    <th scope="col-1"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaBodyPreguntas">
+                                {{#each cuestionario.preguntas}}
+                                <tr>
+                                    <td scope="row" indice="{{id}}" idPregunta="{{idPregunta}}" class="idRespuesta">
+                                        {{@index}}</td>
+                                    <td class="descRespuesta">{{descripcion}}</td>
+                                    <td class="text-center"><button type="button" onclick=eliminar({{@index}})
+                                            class="btn btn-danger btn-sm boton-eliminar">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{else}}
+                                <tr>
+                                    <th colspan="3">No existen respuestas</th>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group mx-4">
+                            <button class="btn btn-success btn-block" id="boton-editar">
+                                Actualizar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var listaPreguntas = []
+    function eliminar(index) {
+        listaPreguntas.splice(index, 1);
+        actualizarTablaPregunta();
+    }
+
+    function actualizarTablaPregunta() {
+        $('#tablaBodyPreguntas').html('');
+        if (listaPreguntas.length > 0) {
+            $.each(listaPreguntas, (index, item) => {
+                $('#tablaBodyPreguntas').append('<tr> ' +
+                    '<th scope="row">' + (index + 1) + '</th>' +
+                    '<td>' + item.descripcion + '</td>' +
+                    '<td class="text-center">' +
+                    '<button type="button" onclick=eliminar(' + index
+                    + ') class="btn btn-danger btn-sm boton-eliminar">'
+                    + '<i class="fas fa-times"></i>' + '</button></td></tr>');
+            });
+        } else {
+            $('#tablaBodyPreguntas').html('<tr>' +
+                '<th colspan = "3" > No existen respuestas</th >' +
+                '</tr > ');
+        }
+    }
+    $(document).ready(() => {
+
+        $("#autocomplete").devbridgeAutocomplete({
+            lookup: function (query, done) {
+                let periodo = $('#selectPeriodo').val();
+                $.ajax({
+                    url: "/preguntas/buscar?descripcion=" + query + "&periodo=" + periodo,
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    method: "GET",
+                    success: function (result) {
+                        var suggestions = [];
+                        result.forEach(function (obj) {
+                            suggestions.push({
+                                value: obj.descripcion,
+                                data: obj
+                            });
+                        });
+                        var result = {
+                            suggestions: suggestions
+                        };
+                        done(result);
+                    }
+                });
+            },
+            minChars: 3,
+            onSelect: function (a) {
+                $('#autocomplete').val('');
+                agregarPregunta(a.data);
+            },
+            showNoSuggestionNotice: !0,
+            noSuggestionNotice: "No se han encontrado resultados"
+        });
+
+        $('#tablaBodyPreguntas tr').each(function (index) {
+            var id = $(this).find('td.idRespuesta').attr('indice');
+            var idPregunta = $(this).find('td.idRespuesta').attr('idPregunta');
+            var descripcion = $(this).find('td.descRespuesta').html();
+            var respuesta = {
+                id: id,
+                idPregunta: idPregunta,
+                descripcion: descripcion,
+                index: index
+            }
+            listaPreguntas.push(respuesta);
+        });
+
+        function agregarPregunta(data) {
+            var pregunta =
+            {
+                idPregunta: data.id, descripcion: data.descripcion
+            }
+            if (listaPreguntas.filter(x => parseInt(x.idPregunta) === data.id).length > 0) {
+                actualizarTablaPregunta();
+            } else {
+                listaPreguntas.push(pregunta);
+                actualizarTablaPregunta();
+            }
+        };
+
+        $('#boton-editar').click(() => {
+            var descripcion = $('#inputDescripcion').val();
+            var periodo = $('#selectPeriodo').val();
+            var inputIdPregunta = $('#inputId').val();
+            var nivel = $('#selectNivelesGobierno').val();
+            fetch('/cuestionario/editar/' + inputIdPregunta, {
+                method: 'POST',
+                body: JSON.stringify({ descripcion: descripcion, periodo: periodo, nivel: nivel, preguntas: listaPreguntas }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(data => {
+                window.location.assign('/cuestionario')
+            });
+        });
+    });
+</script>

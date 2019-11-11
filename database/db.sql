@@ -72,6 +72,35 @@ CONSTRAINT `FK_141` FOREIGN KEY `fkIdx_141` (`nivelGobierno`) REFERENCES `NivelG
 );
 
 
+-- ************************************** `dbo`.`Cuestionario`
 
+CREATE TABLE `dbo`.`Cuestionario`
+(
+ `id`            int NOT NULL AUTO_INCREMENT ,
+ `descripcion`   varchar(50) NULL ,
+ `estado`        tinyint NOT NULL ,
+ `idPeriodo`     int NOT NULL ,
+ `nivelGobierno` char(3) NOT NULL ,
 
+PRIMARY KEY (`id`),
+KEY `fkIdx_135` (`nivelGobierno`),
+CONSTRAINT `FK_135` FOREIGN KEY `fkIdx_135` (`nivelGobierno`) REFERENCES `NivelGobierno` (`id`),
+KEY `fkIdx_34` (`idPeriodo`),
+CONSTRAINT `FK_34` FOREIGN KEY `fkIdx_34` (`idPeriodo`) REFERENCES `dbo`.`Periodo` (`id`)
+);
 
+-- ************************************** `dbo`.`Preguntas_Cuestionario`
+
+CREATE TABLE `dbo`.`Preguntas_Cuestionario`
+(
+ `id`             int NOT NULL AUTO_INCREMENT ,
+ `idPregunta`     int NOT NULL ,
+ `idCuestionario` int NOT NULL ,
+ `valor`          decimal(18,3) NOT NULL ,
+
+PRIMARY KEY (`id`),
+KEY `fkIdx_43` (`idPregunta`),
+CONSTRAINT `FK_43` FOREIGN KEY `fkIdx_43` (`idPregunta`) REFERENCES `dbo`.`Pregunta` (`id`),
+KEY `fkIdx_49` (`idCuestionario`),
+CONSTRAINT `FK_49` FOREIGN KEY `fkIdx_49` (`idCuestionario`) REFERENCES `dbo`.`Cuestionario` (`id`)
+);
