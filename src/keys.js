@@ -1,8 +1,8 @@
 module.exports = {
     database: {
         host: 'localhost',
-        port: '3307',
-        user: 'dbo_user',
+        port: '8889',
+        user: 'dbo',
         password: 'dbo',
         database: 'dbo'
     }

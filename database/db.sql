@@ -1,3 +1,4 @@
+DROP DATABASE dbo;
 CREATE DATABASE dbo;
 
 USE dbo;
@@ -15,7 +16,7 @@ CREATE TABLE `dbo`.`Periodo`
 PRIMARY KEY (`id`)
 );
 
-INSERT INTO `periodo` (`id`, `fechaInicio`, `fechafin`, `descripcion`) VALUES (NULL, '2019-01-01', '2020-07-31', '2019-01'), (NULL, '2019-08-01', '2019-12-31', '2019-02')
+INSERT INTO `periodo` (`id`, `fechaInicio`, `fechafin`, `descripcion`) VALUES (NULL, '2019-01-01', '2020-07-31', '2019-01'), (NULL, '2019-08-01', '2019-12-31', '2019-02');
 
 -- ************************************** `dbo`.`Pregunta`
 
@@ -54,7 +55,7 @@ CREATE TABLE `NivelGobierno`
 PRIMARY KEY (`id`)
 );
 
-INSERT INTO `nivelgobierno` (`descripcion`, `id`) VALUES ('Regional', 'REG'), ('Distrital', 'DIS'), ('Departamental', 'DEP')
+INSERT INTO `nivelgobierno` (`descripcion`, `id`) VALUES ('Regional', 'REG'), ('Distrital', 'DIS'), ('Departamental', 'DEP');
 
 -- ************************************** `Usuario`
 CREATE TABLE `Usuario`
