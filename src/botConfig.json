@@ -1,0 +1,8 @@
+{
+    "apikey": "g9AhgpJ69UDt_eK3spPv8mJBXSavcFy2LllW10eTmSNq",
+    "iam_apikey_description": "Auto-generated for key 54415d1b-2649-413c-a125-ee887096f783",
+    "iam_apikey_name": "Auto-generated service credentials",
+    "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+    "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/82018614710c4993ae76689235999508::serviceid:ServiceId-58e4abc6-8ec2-4488-8764-de720386c04d",
+    "url": "https://gateway.watsonplatform.net/assistant/api"
+}

@@ -7,9 +7,37 @@ const session = require('express-session');
 const mysqltore = require('express-mysql-session');
 const passport = require('passport');
 const { database } = require('./keys');
+const Watson = require("watson-developer-cloud/assistant/v2");
+const watson = require('watson-developer-cloud');
+const Cred = require("./ibm-credentials.json");
+const botConf = require("./botConfig.json");
 // Inicializar
 const app = express();
 require('./lib/passport')
+
+
+var Sess_ID;
+var Res;
+
+// Initialising Watson Assisstant
+
+const Ass = new Watson({
+    version: '2018-11-08',
+    username: 'Put Your Watson Login Username',
+    password: 'Put Your Watson Login Password',
+    url: Cred.URL
+}, (err, res) => {
+    console.log(err);
+    console.log(res);
+});
+
+const service = new watson.AssistantV2({
+    iam_apikey: Cred.API, //Put Your API key from the credential JSON file we created earlier
+    version: '2018-11-08',
+    url: Cred.URL //Put your Url From that credentials JSON file we created earlier
+});
+
+
 
 // Config
 app.set('port', process.env.PORT || 4000);

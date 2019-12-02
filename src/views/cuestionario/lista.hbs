@@ -3,8 +3,8 @@
         <thead class="thead-dark">
             <tr>
                 <th scope="col">Descripcion</th>
-                <th scope="col" class="text-center">Cantidad Respuestas</th>
-                <th scope="col">Periodo</th>
+                <th scope="col" class="text-center">Cantidad Preguntas</th>
+                <th scope="col">Nivel de Gobierno</th>
                 <th scope="col" class="text-right">Acciones</th>
             </tr>
         </thead>
@@ -12,8 +12,8 @@
             {{#each cuestionarios}}
             <tr>
                 <th scope="row">{{descripcion}}</th>
-                <td class="text-center">{{cantidadRespuestas}}</td>
-                <td>{{periodo}}</td>
+                <td class="text-center">{{cantidadPreguntas}}</td>
+                <td>{{nivelDescripcion}}</td>
                 <td class="text-right"><a data-id='{{id}}' class="btn btn-danger text-white botonEliminar">Eliminar</a>
                     <a href="/cuestionario/editar/{{id}}" class="btn btn-secondary">Editar</a></td>
             </tr>

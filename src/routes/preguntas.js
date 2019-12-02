@@ -3,14 +3,14 @@ const router = express.Router();
 
 const pool = require('../database');
 
-// holatequiero
+const { isLoggedIn } = require('../lib/auth');
 
-router.get('/', async (req, res) => {
+router.get('/', isLoggedIn, async (req, res) => {
     const preguntas = await pool.query('SELECT pre.id, pre.descripcion,per.descripcion as periodo ,COUNT(re.id) as cantidadRespuestas FROM Pregunta pre inner join Respuesta re on pre.id = re.idPregunta inner join Periodo per on pre.idPeriodo = per.id GROUP by (pre.id)');
     res.render('preguntas/lista', { preguntas });
 })
 
-router.get('/buscar', async (req, res) => {
+router.get('/buscar', isLoggedIn, async (req, res) => {
     const { descripcion, periodo } = req.query
 
     const preguntas = await pool.query('SELECT * FROM pregunta where descripcion like ? and idPeriodo = ? ', ["%" + descripcion + "%", periodo]);
@@ -19,12 +19,12 @@ router.get('/buscar', async (req, res) => {
     res.send(pregunta);
 })
 
-router.get('/crear', async (req, res) => {
+router.get('/crear', isLoggedIn, async (req, res) => {
     const periodos = await pool.query('SELECT * FROM Periodo');
     res.render('preguntas/crear', { periodos });
 })
 
-router.post('/crear', async (req, res) => {
+router.post('/crear', isLoggedIn, async (req, res) => {
     const { descripcion, periodo, respuestas } = req.body;
     const pregunta = { descripcion: descripcion, idPeriodo: parseInt(periodo) };
     let respInsertPregunta = await pool.query('INSERT INTO Pregunta set ?', [pregunta]);
@@ -40,7 +40,7 @@ router.post('/crear', async (req, res) => {
     res.send('ok');
 })
 
-router.get('/editar/:id', async (req, res) => {
+router.get('/editar/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params
 
     const periodos = await pool.query('SELECT * FROM Periodo');
@@ -60,7 +60,7 @@ router.get('/editar/:id', async (req, res) => {
     res.render('preguntas/editar', { pregunta: body, periodos: periodos });
 });
 
-router.post('/editar/:id', async (req, res) => {
+router.post('/editar/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const { descripcion, periodo, respuestas } = req.body;
     const pregunta = { descripcion: descripcion, idPeriodo: periodo };
@@ -78,7 +78,7 @@ router.post('/editar/:id', async (req, res) => {
     res.send('ok');
 });
 
-router.get('/eliminar/:id', async (req, res) => {
+router.get('/eliminar/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     await pool.query('DELETE FROM Respuesta where idPregunta = ?', [id]);
     await pool.query('DELETE FROM Pregunta WHERE ID = ?', [id]);

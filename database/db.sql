@@ -127,15 +127,23 @@ CONSTRAINT `FK_81` FOREIGN KEY `fkIdx_81` (`idCuestionario`) REFERENCES `dbo`.`C
 
 CREATE TABLE `dbo`.`Preguntas_Resueltas`
 (
- `id`                     int NOT NULL AUTO_INCREMENT ,
- `respuestaDetalle`       varchar(50) NULL ,
- `idUsuarioCuestionario`  int NOT NULL ,
- `idPreguntaCuestionario` int NOT NULL ,
- `preguntaDetalle`        varchar(50) NULL ,
+ `id`                      int NOT NULL AUTO_INCREMENT ,
+ `respuestaDetalle`        varchar(50) NULL ,
+ `idUsuarioCuestionario`   int NOT NULL ,
+ `idPreguntaCuestionario`  int NOT NULL ,
+ `preguntaDetalle`         varchar(50) NULL ,
+ `idRespuestaCuestionario` int NOT NULL ,
 
 PRIMARY KEY (`id`),
+KEY `fkIdx_147` (`idRespuestaCuestionario`),
+CONSTRAINT `FK_147` FOREIGN KEY `fkIdx_147` (`idRespuestaCuestionario`) REFERENCES `dbo`.`Respuesta` (`id`),
 KEY `fkIdx_89` (`idUsuarioCuestionario`),
 CONSTRAINT `FK_89` FOREIGN KEY `fkIdx_89` (`idUsuarioCuestionario`) REFERENCES `dbo`.`Usuario_Cuestionario` (`id`),
 KEY `fkIdx_92` (`idPreguntaCuestionario`),
 CONSTRAINT `FK_92` FOREIGN KEY `fkIdx_92` (`idPreguntaCuestionario`) REFERENCES `dbo`.`Preguntas_Cuestionario` (`id`)
 );
+
+
+
+
+

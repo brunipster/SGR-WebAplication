@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="/css/cuestionarios.css">
+<script src="/js/cuestionario/listaUsuario.js"></script>
+<div class="container b4">
+    <ul class="surveys grid">
+        {{#each cuestionarios}}
+        <li class="survey-item" {{#if resuelto}} onclick='cargarCuestionario({{id}}, {{resuelto.id}})' {{else}}
+            onclick='cargarCuestionario({{id}},-1)' {{/if}}>
+            <span class="survey-name">
+                {{descripcion}}
+            </span>
+
+            <span class="survey-country grid-only">
+                {{nivelDescripcion}}
+            </span>
+
+            <div class="pull-right">
+                {{#if resuelto}}
+                <span class="survey-progress">
+                    <span class="survey-progress-bg">
+                        <span class="survey-progress-fg" style="width: {{resuelto.porcentaje}}%;"></span>
+                    </span>
+
+                    <span class="survey-progress-labels">
+                        <span class="survey-progress-label">
+                            {{resuelto.porcentaje}}%
+                        </span>
+
+                        <span class="survey-completes">
+                            {{resuelto.cantidadRespuestas}} / {{cantidadPreguntas}}
+                        </span>
+                    </span>
+                </span>
+                {{/if}}
+                <span class="survey-end-date draft">
+                    {{periodoDescripcion}}
+                </span>
+            </div>
+        </li>
+        {{else}}
+        <li>
+            <h3>No tienes cuestionarios pendientes</h3>
+        </li>
+        {{/each}}
+    </ul>
+</div>
+{{> cuestionario/modalResolve}}
